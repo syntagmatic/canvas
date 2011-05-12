@@ -18,35 +18,42 @@ $(function() {
   var canvas = document.getElementById("square");
   var context = canvas.getContext("2d");
 
-  var minHue = 90,
-      maxHue = 180,
-      rangeHue = maxHue - minHue;
+  var minHue = 0,
+      rangeHue = 30;
 
-  var i = oi = Math.floor(canvas.width/10),
-      j = oj = Math.floor(canvas.height/10);
+  var i = oi = Math.floor(canvas.width/120),
+      j = oj = Math.floor(canvas.height/120),
+      t = 0;
 
   var colorspace = function() {
     while (i--) {
       while (j--) {
-        context.fillStyle = "hsl(" + minHue + rangeHue*Math.random() + ","
+        context.fill();
+        context.fillStyle = "hsl(" + (t%360) + rangeHue*Math.random() + ","
                                    + 100*Math.random() + "%,"
-                                   + 90*Math.random() + "%)";
+                                   + (15+75*Math.random()) + "%)";
         /*
         context.fillStyle = "rgb(" + Math.round(255*Math.random()) + ","
                                    + Math.round(255*Math.random()) + ","
                                    + Math.round(255*Math.random()) + ")";
         */
-        context.fillRect( i*10
-                        , j*10
-                        , 9 
-                        , 9);
+        context.beginPath();
+        context.arc( i*120 + 240*Math.random()
+                   , j*120 + 240*Math.random()
+                   , 15*Math.random()+60*Math.pow(Math.random(),17)
+                   , 0 
+                   , 2*Math.PI
+                   , false);
+        context.closePath();
       }
       j = oj;
     }
     i = oi
     setTimeout( function() {
       colorspace();
-    }, 20);
+    }, 120);
+
+    t++;
   };
 
   colorspace();

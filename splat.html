@@ -22,12 +22,13 @@ $(function() {
       maxHue = 180,
       rangeHue = maxHue - minHue;
 
-  var i = oi = Math.floor(canvas.width/10),
-      j = oj = Math.floor(canvas.height/10);
+  var i = oi = Math.floor(canvas.width/40),
+      j = oj = Math.floor(canvas.height/40);
 
   var colorspace = function() {
     while (i--) {
       while (j--) {
+        context.fill();
         context.fillStyle = "hsl(" + minHue + rangeHue*Math.random() + ","
                                    + 100*Math.random() + "%,"
                                    + 90*Math.random() + "%)";
@@ -36,17 +37,21 @@ $(function() {
                                    + Math.round(255*Math.random()) + ","
                                    + Math.round(255*Math.random()) + ")";
         */
-        context.fillRect( i*10
-                        , j*10
-                        , 9 
-                        , 9);
+        context.beginPath();
+        context.arc( i*40 + 90*Math.random()
+                   , j*40 + 90*Math.random()
+                   , 12*Math.random()
+                   , 0 
+                   , 2*Math.PI
+                   , false);
+        context.closePath();
       }
       j = oj;
     }
     i = oi
     setTimeout( function() {
       colorspace();
-    }, 20);
+    }, 400);
   };
 
   colorspace();
