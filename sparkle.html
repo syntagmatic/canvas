@@ -7,10 +7,11 @@ html, body {
   padding: 0;
 }
 body {
-  background: #333;
+  background: #222;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.js"></script>
+<script src="http://ajax.cdnjs.com/ajax/libs/underscore.js/1.1.5/underscore-min.js"></script>
 <script>
 $(function() {
   $('#square').attr({width: $('#square').parent().width(),
@@ -25,39 +26,67 @@ $(function() {
       j = oj = Math.floor(canvas.height/120),
       t = 0;
 
+  context.circle = function(x, y, r) {
+    this.arc(x, y, r, 0 , 2*Math.PI, false);
+  };
+
+  context.circles = function(list) {
+    _(list).each(function(item) {
+        context.circle(item.x, item.y, item.r);
+    });
+  };
+
+  var grays = [];
+
   var colorspace = function() {
+
     while (i--) {
       while (j--) {
         context.fill();
         context.fillStyle = "hsl(" + (t%360) + rangeHue*Math.random() + ","
                                    + 100*Math.random() + "%,"
                                    + (15+75*Math.random()) + "%)";
-        if (Math.round( 1.2*Math.random() )) {
-            context.fillStyle = "#333";
-        }
-        /*
-        context.fillStyle = "rgb(" + Math.round(255*Math.random()) + ","
-                                   + Math.round(255*Math.random()) + ","
-                                   + Math.round(255*Math.random()) + ")";
-        */
         context.beginPath();
-        context.arc( i*120 + 240*Math.random()
-                   , j*120 + 240*Math.random()
-                   , 15*Math.random()+240*Math.pow(Math.random(),17)
-                   , 0 
-                   , 2*Math.PI
-                   , false);
+        context.circle( i*120 + 240*Math.random()
+                      , j*120 + 240*Math.random()
+                      , 15*Math.random()
+                      );
         context.closePath();
       }
       j = oj;
     }
     i = oi
+
+    if (t%24 == 0) {
+      grays = [];
+    }
+
+    var b = 11;
+
+    if (t%4 == 0) {
+      while (b--) {
+        grays.push(
+          { x: canvas.width*Math.random()
+          , y: canvas.height*Math.random()
+          , r: 160*Math.random() 
+        });
+      }
+    }
+
+    context.fill()
+    context.fillStyle = "#222"
+    context.beginPath();
+    context.circles(grays);
+    context.closePath();
+
     setTimeout( function() {
       colorspace();
-    }, 500);
+    }, 100);
 
     t++;
   };
+
+
 
   colorspace();
 });
